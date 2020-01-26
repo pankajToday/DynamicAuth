@@ -11,6 +11,18 @@
 |
 */
 
-Route::get('/', function () {
+/*Route::get('/', function () {
     return view('welcome');
+});*/
+
+Route::get("/","dynamicAuthController@loginShow")->name('login');
+Route::get("login","dynamicAuthController@loginShow")->name('login');
+Route::post("login","dynamicAuthController@loginDo")->name('loginDo');
+
+
+
+Route::group(['middleware' => 'auth:web'],function (){
+    Route::get("dashboard","DashboardController@home")->name('home');
 });
+
+
