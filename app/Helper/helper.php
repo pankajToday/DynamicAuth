@@ -41,7 +41,8 @@
         \Config::set('database.connections.myDBConfig.database', $dbConfig['dbName']);
         \DB::setDefaultConnection('myDBConfig');
         \DB::reconnect('myDBConfig');
-        return "Database Name  ".\DB::connection()->getDatabaseName();
+        session()->put('session_db',\DB::connection()->getDatabaseName());
+        return \DB::connection()->getDatabaseName();
     }
     else
     {

@@ -12,11 +12,18 @@ class DashboardController extends Controller
 {
     function home()
     {
-        return Auth::user();
+        if( Auth::check())
+        {
+            return Auth::user();
+        }
+        return 0;
     }
 
 
-
+    function home2()
+    {
+        return Auth::user();
+    }
 
 
 }

@@ -18,6 +18,7 @@
                     </th>
                     <td>
                         <input type="text" name="login_id" value="abc" >
+
                     </td>
                 </tr>
                 <tr>
@@ -35,7 +36,11 @@
                 </tr>
             </table>
         </form>
+
     </div>
+    @if( session()->get('alt') == 'danger')
+    {{ session()->get('message')}}
+    @endif
     <script>
 
     </script>
