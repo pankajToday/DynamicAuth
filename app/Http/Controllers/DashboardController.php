@@ -10,19 +10,15 @@ use phpDocumentor\Reflection\Types\Self_;
 
 class DashboardController extends Controller
 {
-    function home()
+    function home(Request $req)
     {
-        if( Auth::check())
-        {
-            return Auth::user();
-        }
-        return 0;
+          return   $req->token ;// Auth::user();
     }
 
 
-    function home2()
+    function home2( Request $req)
     {
-        return Auth::user();
+        return   dnc($req->token);
     }
 
 

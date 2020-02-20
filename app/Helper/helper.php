@@ -1,6 +1,8 @@
 <?php
 
- function checkDatabase( $dbName )
+use App\Model\User;
+
+function checkDatabase($dbName )
 {
     $query = "SELECT SCHEMA_NAME FROM INFORMATION_SCHEMA.SCHEMATA WHERE SCHEMA_NAME =  ?";
     $db = \DB::select($query, [$dbName]);
@@ -26,6 +28,9 @@
     if(  checkDatabase(  $dbConfig['dbName'] ) )
     {
         \DB::disconnect('mysql');
+        \DB::disconnect('myDBConfig');
+
+        \DB::setDefaultConnection('myDBConfig');
         \Config::set('database.connections.myDBConfig', array(
             'driver'    => 'mysql',
             'host'      => $dbConfig['dbHost'],
@@ -38,10 +43,11 @@
             'strict' => false,
             'engine'=>"InnoDB"
         ));
+
         \Config::set('database.connections.myDBConfig.database', $dbConfig['dbName']);
-        \DB::setDefaultConnection('myDBConfig');
+        DB::purge('myDBConfig');
         \DB::reconnect('myDBConfig');
-        session()->put('session_db',\DB::connection()->getDatabaseName());
+        session()->put('myDatabase',\DB::connection()->getDatabaseName());
         return \DB::connection()->getDatabaseName();
     }
     else
@@ -51,6 +57,30 @@
 
 
 }
+
+ function dynamicAuthLogin( $databaseName, $login_id, $password )
+ {
+     if( $databaseName ==  dynamicDatabaseConfig($databaseName))
+     {
+         $user=  User::where("login_id",$login_id)->first();
+
+         if( $user )
+         {
+             if(\Hash::check($password,$user->password ))
+             {
+                 \Auth::login($user);
+                  $token =  hash('sha1', $user->id.'-'.$password);
+                   $user->update(["login_token"=>$token]);
+                 return ["status"=>"success","message"=>"Login success","token"=>$token];
+             }
+             return ["status"=>"failed","message"=>"Password not matched","token"=>""];
+         }
+         return ["status"=>"failed","message"=>"Login-Id not matched","token"=>""];
+     }
+     return ["status"=>"failed","message"=>"Client App is disabled.","token"=>""];
+
+ }
+
 
  function enc($string) {
     $output = false;

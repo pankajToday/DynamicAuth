@@ -4,20 +4,21 @@ namespace App\Http\Controllers;
 
 
 
+use App\Model\User;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use phpDocumentor\Reflection\Types\Self_;
+
 
 class DynamicAuthController extends Controller
 {
- use AuthenticatesUsers;
+/* use AuthenticatesUsers;
 
 
      function username()
      {
          return 'login_id';
-     }
+     }*/
 
     public function loginShow()
     {
@@ -26,20 +27,10 @@ class DynamicAuthController extends Controller
 
     public function loginDo(Request $req)
     {
-        $dbName =  "dynamic_auth_1";
+      $data = dynamicAuthLogin( $req->dbName , $req->login_id , $req->password );
 
-        if(!$dbName == dynamicDatabaseConfig($dbName))
-        {
-           return "Invalid Database.";
-        }
+      return redirect()->route('home2',["token"=>enc($data['token'])]);
 
-        if( \Auth::attempt(["login_id"=>$req->login_id ,"password"=>$req->password]) )
-        {
-            session()->put('session_login_id',$req->login_id);
-           return redirect('dashboard');
-            // return response()->json(["status"=>"success"]);
-        }
-        return response()->json(["status"=>"fail"]);
     }
 
     public function logOut()
@@ -49,6 +40,10 @@ class DynamicAuthController extends Controller
        session()->flush();
        return redirect()->route('login');
     }
+
+
+
+
 
 
 }

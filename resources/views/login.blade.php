@@ -17,6 +17,15 @@
                         Login Id
                     </th>
                     <td>
+                        <input type="text" name="dbName" value="dynamic_auth_1" >
+
+                    </td>
+                </tr>
+                <tr>
+                    <th>
+                        Login Id
+                    </th>
+                    <td>
                         <input type="text" name="login_id" value="abc" >
 
                     </td>

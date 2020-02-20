@@ -21,8 +21,10 @@ Route::post("login","dynamicAuthController@loginDo")->name('loginDo');
 Route::get("logout","dynamicAuthController@logOut")->name('logOut');
 // Route::group(['middleware'=>['auth:web']],function() {
 
-Route::group(['middleware' => ['DynamicAuth']],function (){
+Route::group(['middleware' => ['auth:web']],function (){
     Route::get("dashboard","DashboardController@home")->name('home');
 });
 
-Route::get("dashboard2","DashboardController@home2");
+Route::group(['middleware' => ['DynamicAuth']],function (){
+    Route::get("dashboard2","DashboardController@home2")->name('home2');
+});

@@ -2,10 +2,11 @@
 
 namespace App\Http\Middleware;
 
+use App\Http\Controllers\DynamicAuthController;
 use Closure;
 use Illuminate\Support\Facades\Auth;
 
-class DynamicAuthMiddleware
+class DynamicAuthMiddleware extends  DynamicAuthController
 {
     /**
      * Handle an incoming request.
@@ -16,16 +17,12 @@ class DynamicAuthMiddleware
      */
     public function handle($request, Closure $next)
     {
-       // dd(  session()->get('session_db') ,dynamicDatabaseConfig(session()->get('session_db'))   );
-
-        if( session()->get('session_db')  &&
-            session()->get('session_db') == dynamicDatabaseConfig(session()->get('session_db'))  )
+        $database = dynamicDatabaseConfig(session()->get('myDatabase'));
+        if( session()->get('myDatabase')  == $database  )
         {
             return $next($request);
         }
-
-        session()->flash('alt','danger');
-        return redirect()->route('login')->with('message', 'Login-id or password not correct ');
+        return redirect()->route('logOut');
      //  return response()->json(['data'=>"unauthenticated user found."],401);
     }
 }
